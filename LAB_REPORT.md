@@ -30,3 +30,14 @@ I am tasked to explain a few files before I begin:
 > Does `random_state=42` guarantee bit-for-bit identical results on every CPU/GPU/software stack?
 
 Not really, a seed guarantees the same random numbers from the same generator. It doesn't guarantee the same arithmetic results. CUDA has it's own generator and kernels so whether you use a CPU or a GPU, the results may differ. Also, different versions of libraries may have different implementations of algorithms which can lead to different results even with the same seed. Software stack differences maybe also a factor.
+
+### Milestone 2 - Extract and track the images
+
+#### Engineering checkpoint 3.
+> In one sentence each: what does the Git remote store, what does the DVC remote store, and does git push transfer the DVC-managed raw images?
+
+- Git remote: It stores the versioned source code, configuration files (such as pyproject.toml, or the dvc metadata), and other text-based assets of the project.
+- DVC remote: It stores the actual data files (like images, datasets, models) that are tracked by DVC, allowing for version control of large files without bloating the Git repository.
+- Does git push transfer the DVC-managed raw images? No, `git push` only transfers the Git-tracked files to the remote repository. The DVC-managed raw images are stored in the DVC remote and need to be pushed separately using `dvc push`.
+
+### Milestone 3 - Implement a Core data-quality gate
