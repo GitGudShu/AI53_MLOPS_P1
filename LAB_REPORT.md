@@ -145,3 +145,8 @@ All three Runs use the same prepared data (`training_data_identity` 8fa943ff…)
 I chose validation macro-F1 as the primary metric because this is a three-class diagnosis problem in which every class matters equally. Here, failing to recognise one disease is a failure on us whatever the overall accuracy looks like. The classes are nearly balanced here (train 345/348/341, validation 44/45/44), so accuracy and macro-F1 move together, but they are not interchangeable. Runs A and C have exactly the same validation accuracy (85 of 133 images) and different macro-F1 (0.6254 vs 0.6349), which shows that their errors are distributed differently across the classes and that macro-F1 captures a difference accuracy cannot. Ties are broken by the lower final validation loss as stated above in milestone 6.
 
 Models are selected using validation metrics rather than test scores to prevent optimistic bias on unseen data, and the pipeline enforces this by keeping the test set out of training and evaluating only a single frozen `selection.run_id` without depending on the training stage.
+
+### Milestone 8 - Select and test on model
+
+Looking at the table made in milestone 7, we can clearly see that run C has the best validation metrics without even a need for a tie-breaker. So I choose run C as the best model and set `selection.run_id` to `f6671d76abc44033ab5e59ac6ebf34f7`. 
+

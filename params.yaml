@@ -24,4 +24,4 @@ tracking:
   experiment: "bean-image-classification"
 
 selection:
-  run_id: ""
+  run_id: "f6671d76abc44033ab5e59ac6ebf34f7"
