@@ -76,3 +76,26 @@ It tells use which model is being evaluated. If we don't track the run_id, we wo
 - Git records the version of the source code that led to the training run, including scripts, configuration files, and any other text-based assets.
 - DVC records which data and stage outputs were used in the training run.
 - MLflow records what happened during an execution of a training run, including parameters, metrics, artifacts, and the model itself. Runs can be compared and reproduced using the information logged by MLflow.
+
+# Milestone 6 - Predict which stages need to run again
+
+| Change | **VALIDATE** | **PREPARE** | **TRAIN** | **EVALUATE** |
+| --- | --- | --- | --- | --- |
+| Change `train.learning_rate` | REUSED | REUSED | RERUN | REUSED |
+| Change `data.image_size` | REUSED | RERUN | RERUN | NEEDS UPDATE |
+| Edit `src/validate_data.py` | RERUN | REUSED | REUSED | REUSED |
+| Edit only `README.md` | REUSED | REUSED | REUSED | REUSED |
+
+#### Engineering checkpoint 5.
+
+Let's take a look at `data.image_size` change. `validate_data.py` never reads `params.yaml` and no parameter is declared so `VALIDATE` is `REUSED`. `PREPARE` as `image_size` in its parameters so it is `RERUN`. `TRAIN` also has `image_size` in its parameters and its dependencies get new hashes so it is `RERUN`. For `EVALUATE` it lists `image_size` and `data.processed/test` and the manifest changes so it is `NEEDS UPDATE`. The stage's outputs are not stale but the manifest is so it needs to be updated. Although using the same run id, it should mean that re-running `EVALUATE` would actually not work because the run's logged `image_size` would no longer match the new value I think, I'm not sure if it's an issue.
+
+If we edit `src/validate_data.py`, `VALIDATE` is `RERUN` because the file is one of its dependencies and the file's hash changes. `PREPARE` is `REUSED` as `reports/data_quality.json` is one of its dependencies, the file is unchanged from VALIDATE even though the file got rewritten so its hash should be unchanged. DVC compares hashes not modifications times. `TRAIN` and `EVALUATE` are `REUSED` because nothing changed for them upstream.
+
+#### Run and check the training stages
+
+Given the type of model we deal with, I assume the main validation metric would be `val_loss` and perhaps `val_macro_f1` as well, using both would help me break a tie between one another. We want to see the loss decrease and the f1 increase over epochs.
+
+If the learning rate is lower the weights will move slower, so finer updates and a slower convergence. So the loss could be higher using the same number of epochs. We trade stability for speed.
+
+- Run ID (A) : cbbf401c41104b438bcadb025064e5d2
