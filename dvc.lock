@@ -119,16 +119,16 @@ stages:
       size: 1081
     - path: src/provenance.py
       hash: md5
-      md5: d64340530971f997947212e4297126cd
-      size: 3925
+      md5: fe18c72ec2507e43e9aa3da53946701f
+      size: 3926
     - path: src/reproducibility.py
       hash: md5
       md5: b687b8b7717db248fb6140110102135b
       size: 1035
     - path: src/train.py
       hash: md5
-      md5: c3435e72ec3df41acf01937da3bf9140
-      size: 14643
+      md5: 4884e46382d96f2e90a2b6cc6c3bec53
+      size: 14644
     - path: uv.lock
       hash: md5
       md5: afd72528b6d3d31bcbf88c92b0545f40
@@ -142,25 +142,25 @@ stages:
         data.image_size: 96
         tracking.experiment: bean-image-classification
         tracking.uri: http://127.0.0.1:5000
-        train.batch_size: 32
+        train.batch_size: 16
         train.dropout: 0.3
         train.epochs: 4
-        train.learning_rate: 0.0003
+        train.learning_rate: 0.001
         train.random_state: 42
     outs:
     - path: models/model.pt
       hash: md5
-      md5: 8304235c5a11796275a18ef3e23ba82c
+      md5: 56245c74fb3793a9888a42c61b397c28
       size: 98673
     - path: reports/run_manifest.json
       hash: md5
-      md5: 529f6fc4f9503cc2885e28276a442b33
-      size: 892
+      md5: cd37ee838a181d9de1a0e865eacc74b6
+      size: 890
     - path: reports/train_summary.json
       hash: md5
-      md5: 05ab784eee51a238b16dcd9b08eef543
+      md5: 304c3b07d20f7fceba1f9c1a9358250c
       size: 256
     - path: reports/training_curves.png
       hash: md5
-      md5: 69d34d8037e715d075455170ef0bca34
-      size: 105238
+      md5: 21cf9c7b9cb8a48169144c1155746b23
+      size: 88073

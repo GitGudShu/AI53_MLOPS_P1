@@ -127,3 +127,21 @@ This matches what we predicted. The lower learning rate gives higher losses and 
 #### Create run C
 
 After I changed back the learning rate to 0.001. I decided to change the batch size to 16 instead of 32. Our current diagnosis is that the model is under-trained, so a smaller batch size should give more updates per epoch and help it converge faster, meaning the loss should decrease and the scores should increase. I ran `dvc repro train` again to create run C.
+
+- Run ID (C) : f6671d76abc44033ab5e59ac6ebf34f7
+
+## Milestone 7 – Controlled comparison
+
+All three Runs use the same prepared data (`training_data_identity` 8fa943ff…), seed (42), epochs (4), device (CPU) and locked environment. Scores are taken from the final epoch (epoch 4), because TRAIN logs the last-epoch model.
+
+| Run | Controlled change | Val. Accuracy | Val. Macro-F1 | Val. loss | Training time | MLflow Run ID |
+|-----|-------------------|---------------|---------------|-----------|---------------|---------------|
+| A | Baseline (lr 0.001, batch 32, dropout 0.30, no augmentation) | 0.6391 | 0.6254 | 0.8329 | 10.90 s | `cbbf401c41104b438bcadb025064e5d2` |
+| B | `train.learning_rate` 0.001 → 0.0003 | 0.6165 | 0.6091 | 0.8927 | 10.76 s | `01642b2a11d54d078fc89a5c871de4a6` |
+| C | `train.batch_size` 32 → 16 and `learning_rate` 0.0003 → 0.001 | 0.6391 | 0.6349 | 0.8135 | 11.04 s | `f6671d76abc44033ab5e59ac6ebf34f7` |
+
+### Engineering checkpoint 6
+
+I chose validation macro-F1 as the primary metric because this is a three-class diagnosis problem in which every class matters equally. Here, failing to recognise one disease is a failure on us whatever the overall accuracy looks like. The classes are nearly balanced here (train 345/348/341, validation 44/45/44), so accuracy and macro-F1 move together, but they are not interchangeable. Runs A and C have exactly the same validation accuracy (85 of 133 images) and different macro-F1 (0.6254 vs 0.6349), which shows that their errors are distributed differently across the classes and that macro-F1 captures a difference accuracy cannot. Ties are broken by the lower final validation loss as stated above in milestone 6.
+
+Models are selected using validation metrics rather than test scores to prevent optimistic bias on unseen data, and the pipeline enforces this by keeping the test set out of training and evaluating only a single frozen `selection.run_id` without depending on the training stage.
