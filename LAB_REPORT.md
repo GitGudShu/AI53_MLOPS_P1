@@ -99,3 +99,25 @@ Given the type of model we deal with, I assume the main validation metric would 
 If the learning rate is lower the weights will move slower, so finer updates and a slower convergence. So the loss could be higher using the same number of epochs. We trade stability for speed.
 
 - Run ID (A) : cbbf401c41104b438bcadb025064e5d2
+- Run ID (B) : 01642b2a11d54d078fc89a5c871de4a6 
+
+#### Verify the learning rate change
+
+| Check | **VALIDATE** | **PREPARE** | **TRAIN** | **EVALUATE** |
+| --- | --- | --- | --- | --- |
+| Baseline, Run A (first `dvc repro train`) | RERUN | RERUN | RERUN | NOT RUN |
+| Re-run, nothing changed | REUSED | REUSED | REUSED | NOT RUN |
+| Comment added to `src/validate_data.py` | RERUN | REUSED | REUSED | NOT RUN |
+| `train.learning_rate = 0.0003`, Run B | REUSED | REUSED | RERUN | NOT RUN |
+
+- `EVALUATE` is `NOT RUN` everywhere because dvc repro train only reproduces train and its upstream stages. `EVALUATE` is on another branch of the DAG.
+- For the comment put in `src/validate_data.py`, it matches row 3 of the prediction table. `VALIDATE` reran because its code dependencies changed. It rewrote `data_quality.json` with identical bytes, so `PREPARE`'s dependency hash didn't change and DVC skipped it, and `TRAIN` with it. 
+- For the learning-rate: it matches row 1. Only `TRAIN` lists train.learning_rate in its params.
+- Baseline row: That's the only real difference kind of. Everything ran because `dvc.lock` didn't exist yet ("Generating lock file"), so DVC had no recorded state to compare with. 
+
+| Run | lr | Final val_loss | Final val_acc | Final val_macro_f1 |
+| --- | --- | --- | --- | --- |
+| A | 0.001 | 0.8329 | 0.6391 | 0.6254 (peak 0.6445 at epoch 3) |
+| B | 0.0003 | 0.8927 | 0.6165 | 0.6091 |
+
+This matches what we predicted. The lower learning rate gives higher losses and lower scores after 4 epochs. B's curves are still clearly improving at epoch 4, so it's under-trained, not intrinsically worse. A's macro-F1 dips slightly at epoch 4 while its val_loss keeps decreasing.

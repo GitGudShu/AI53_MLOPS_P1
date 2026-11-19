@@ -145,22 +145,22 @@ stages:
         train.batch_size: 32
         train.dropout: 0.3
         train.epochs: 4
-        train.learning_rate: 0.001
+        train.learning_rate: 0.0003
         train.random_state: 42
     outs:
     - path: models/model.pt
       hash: md5
-      md5: ffd9cb5ca1e0e149c0c84ecaad120c04
+      md5: 8304235c5a11796275a18ef3e23ba82c
       size: 98673
     - path: reports/run_manifest.json
       hash: md5
-      md5: b73288327b3e5061bccbdcc7def7ae1d
-      size: 891
+      md5: 529f6fc4f9503cc2885e28276a442b33
+      size: 892
     - path: reports/train_summary.json
       hash: md5
-      md5: 395bd27b8182c8636d32abffa782aa23
-      size: 255
+      md5: 05ab784eee51a238b16dcd9b08eef543
+      size: 256
     - path: reports/training_curves.png
       hash: md5
-      md5: e932eb7ea5bb1127ef0e52a2ffebb6d1
-      size: 93114
+      md5: 69d34d8037e715d075455170ef0bca34
+      size: 105238
