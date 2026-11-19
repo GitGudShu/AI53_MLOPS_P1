@@ -86,7 +86,7 @@ def build_run_manifest(params: dict, device: str, mlflow_run_id: str) -> dict:
             "dropout": float(train_cfg["dropout"]),
             "augmentation": {
                 "enabled": bool(aug_cfg.get("enabled", False)),
-                "horizontal_flip": bool(aug_cfg.get("horizontal_flip", False)),
+                "horizontal_flip": float(aug_cfg.get("horizontal_flip", False)),
                 "rotation_degrees": float(aug_cfg.get("rotation_degrees", 0.0)),
             },
         },

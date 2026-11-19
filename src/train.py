@@ -190,7 +190,7 @@ def main() -> None:
                 "dropout": float(params["train"]["dropout"]),
                 "random_state": int(params["train"]["random_state"]),
                 "augmentation_enabled": bool(params["augmentation"]["enabled"]),
-                "horizontal_flip": bool(params["augmentation"]["horizontal_flip"]),
+                "horizontal_flip": float(params["augmentation"]["horizontal_flip"]),
                 "rotation_degrees": float(params["augmentation"]["rotation_degrees"]),
                 "device": str(device),
                 "training_data_identity": training_identity,
