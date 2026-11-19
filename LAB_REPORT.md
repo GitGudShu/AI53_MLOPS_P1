@@ -19,3 +19,14 @@
 `model.pt` is the output of an experiment it stores weights, class_names, image_size and dropout but nothing about the what commit produced it, the hyperparameters used to train it, the data it was trained on etc...
 
 ### Milestone 1 - Make training repeatable
+
+I am tasked to explain a few files before I begin:
+- `pyproject.toml` is a written file that lists the project's direct dependencies and their versions. I say  versions but they are ranges so it doesn't guarantee that every collaborator will have the same version of the dependencies. 
+- `uv.lock` is a generated file that completes the `pyproject.toml` by listing the exact versions of ALL dependencies and their transitive dependencies. This one is important for reproducibility.
+- `.venv` is a folder that contains the virtual environment for the project. It is not tracked by git and should be ignored. It is important to have a virtual environment to isolate the project's dependencies from the system's Python installation especially when working on multiple projects with different dependencies.
+
+#### Engineering checkpoint 2.
+
+> Does `random_state=42` guarantee bit-for-bit identical results on every CPU/GPU/software stack?
+
+Not really, a seed guarantees the same random numbers from the same generator. It doesn't guarantee the same arithmetic results. CUDA has it's own generator and kernels so whether you use a CPU or a GPU, the results may differ. Also, different versions of libraries may have different implementations of algorithms which can lead to different results even with the same seed. Software stack differences maybe also a factor.
