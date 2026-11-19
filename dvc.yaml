@@ -1,0 +1,93 @@
+stages:
+  validate:
+    cmd: uv run --locked python -m src.validate_data
+    deps:
+      - src/validate_data.py
+      - data/raw
+      - uv.lock
+      - pyproject.toml
+    outs:
+      - reports/data_quality.json:
+          cache: false
+
+  prepare:
+    cmd: uv run --locked python -m src.prepare
+    deps:
+      - src/prepare.py
+      - data/raw
+      - reports/data_quality.json
+      - uv.lock
+      - pyproject.toml
+    params:
+      - data.image_size
+    outs:
+      - data/processed/train
+      - data/processed/validation
+      - data/processed/test
+      - data/processed/manifests/train.csv
+      - data/processed/manifests/validation.csv
+      - data/processed/manifests/test.csv
+      - reports/data_summary.json:
+          cache: false
+
+  train:
+    cmd: uv run --locked python -m src.train
+    deps:
+      - src/train.py
+      - src/data.py
+      - src/model.py
+      - src/provenance.py
+      - src/reproducibility.py
+      - data/processed/train
+      - data/processed/validation
+      - data/processed/manifests/train.csv
+      - data/processed/manifests/validation.csv
+      - uv.lock
+      - pyproject.toml
+    params:
+      - data.image_size
+      - train.batch_size
+      - train.epochs
+      - train.learning_rate
+      - train.dropout
+      - train.random_state
+      - augmentation.enabled
+      - augmentation.horizontal_flip
+      - augmentation.rotation_degrees
+      - compute.device
+      - tracking.experiment
+      - tracking.uri
+    outs:
+      - models/model.pt
+      - reports/train_summary.json:
+          cache: false
+      - reports/training_curves.png:
+          cache: false
+      - reports/run_manifest.json:
+          cache: false
+
+  evaluate:
+    cmd: uv run --locked python -m src.evaluate
+    deps:
+      - src/evaluate.py
+      - src/data.py
+      - src/provenance.py
+      - src/reproducibility.py
+      - data/processed/test
+      - data/processed/manifests/train.csv
+      - data/processed/manifests/validation.csv
+      - uv.lock
+      - pyproject.toml
+    params:
+      - selection.run_id
+      - evaluation.batch_size
+      - data.image_size
+      - tracking.uri
+      - tracking.experiment
+      - compute.device
+    metrics:
+      - reports/test_metrics.json:
+          cache: false
+    outs:
+      - reports/test_confusion_matrix.png:
+          cache: false

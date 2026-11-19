@@ -41,3 +41,29 @@ Not really, a seed guarantees the same random numbers from the same generator. I
 - Does git push transfer the DVC-managed raw images? No, `git push` only transfers the Git-tracked files to the remote repository. The DVC-managed raw images are stored in the DVC remote and need to be pushed separately using `dvc push`.
 
 ### Milestone 3 - Implement a Core data-quality gate
+
+DONE
+
+### Milestone 4 - Design the DVC pipeline from scratch
+
+
+>Should PREPARE depend on reports/data_quality.json?
+
+Yes, to my knowledge it is the only way DVC knows that PREPARE comes after VALIDATE.
+
+>Should PREPARE also depend directly on data/raw?
+
+Yes, PREPARE needs to go through the images in data/raw to prepare them for training. If the raw data changes, PREPARE should be re-run to ensure that the prepared data is up-to-date.
+
+>Which changes in params.yaml should make TRAIN run again?
+
+If the hyperparameters that affect the training process are changed, such as learning rate, batch size, number of epochs, or any other parameter that influences the model's training behavior, TRAIN should run again to reflect those changes in the training process.
+
+>Why should EVALUATE track selection.run_id?
+
+It tells use which model is being evaluated. If we don't track the run_id, we won't know which model's performance metrics are being reported in the evaluation phase, making it difficult to compare different models or runs.
+
+>Which file contains scores that DVC should track as metrics?
+
+`reports/test_metrics.json` contains the scores that DVC should track as metrics. This file typically includes evaluation metrics such as accuracy, precision, recall, F1-score, etc.....
+
