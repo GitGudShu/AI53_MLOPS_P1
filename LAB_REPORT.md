@@ -121,3 +121,9 @@ If the learning rate is lower the weights will move slower, so finer updates and
 | B | 0.0003 | 0.8927 | 0.6165 | 0.6091 |
 
 This matches what we predicted. The lower learning rate gives higher losses and lower scores after 4 epochs. B's curves are still clearly improving at epoch 4, so it's under-trained, not intrinsically worse. A's macro-F1 dips slightly at epoch 4 while its val_loss keeps decreasing.
+
+### Milestone 7 - Compare three controlled runs
+
+#### Create run C
+
+After I changed back the learning rate to 0.001. I decided to change the batch size to 16 instead of 32. Our current diagnosis is that the model is under-trained, so a smaller batch size should give more updates per epoch and help it converge faster, meaning the loss should decrease and the scores should increase. I ran `dvc repro train` again to create run C.
