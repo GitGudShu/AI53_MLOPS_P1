@@ -67,3 +67,12 @@ It tells use which model is being evaluated. If we don't track the run_id, we wo
 
 `reports/test_metrics.json` contains the scores that DVC should track as metrics. This file typically includes evaluation metrics such as accuracy, precision, recall, F1-score, etc.....
 
+### Milestone 5 - Record what each MLflow Run used
+
+#### Engineering checkpoint 4.
+
+>In one sentence per tool, explain what Git, DVC and MLflow each record about a training Run.
+
+- Git records the version of the source code that led to the training run, including scripts, configuration files, and any other text-based assets.
+- DVC records which data and stage outputs were used in the training run.
+- MLflow records what happened during an execution of a training run, including parameters, metrics, artifacts, and the model itself. Runs can be compared and reproduced using the information logged by MLflow.
