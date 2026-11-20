@@ -150,3 +150,7 @@ Models are selected using validation metrics rather than test scores to prevent 
 
 Looking at the table made in milestone 7, we can clearly see that run C has the best validation metrics without even a need for a tie-breaker. So I choose run C as the best model and set `selection.run_id` to `f6671d76abc44033ab5e59ac6ebf34f7`. 
 
+On the 128 test images, the selected model reached a test accuracy of 0.7031 (90 correct) and a test macro-F1 of 0.6973. These are about six points higher than its validation scores (0.6391 and 0.6349). With 128 test and 133 validation images, one image is worth about 0.8 percentage points, and I believe a gap of this size (roughly eight images) is within the sampling variation expected from two small, independent splits.
+
+The overall accuracy shown in the confusion matrix masks severe class imbalance in errors, especially bean rust recall at 0.51 (22 of 43) with 12 bean-rust leaves misclassified as healthy and leaving diseased crops untreated, which is why macro-F1 is the primary metric and why longer training and post-underfitting augmentation should be tested on validation before touching the test set again.
+
